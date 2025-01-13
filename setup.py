@@ -21,7 +21,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Natural Language :: English'
     ],
-    url='TBD',
+    url='https://github.com/riley-momo/ProcessMeaningPatternsPython',
     install_requires=[
         'numpy',
         'pandas',
