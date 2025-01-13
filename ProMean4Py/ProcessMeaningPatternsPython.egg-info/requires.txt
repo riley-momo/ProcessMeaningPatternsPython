@@ -4,3 +4,6 @@ pm4py
 kglab
 yatter
 ruamel.yaml
+
+[dev]
+twine>=4.0.2

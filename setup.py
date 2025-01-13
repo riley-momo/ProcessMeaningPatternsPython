@@ -30,5 +30,8 @@ setup(
         'yatter',
         'ruamel.yaml'
         ],
+    extras_require={
+        'dev' : ['twine>=4.0.2']
+    },
     python_requires='>=3.9',  
 )

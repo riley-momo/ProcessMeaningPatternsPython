@@ -1,3 +1,4 @@
+LICENSE
 README.md
 setup.py
 ProMean4Py/ProcessMeaningPatternsPython.egg-info/PKG-INFO
