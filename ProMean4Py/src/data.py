@@ -21,11 +21,13 @@ class LogProcessor:
     def __init__(self, log_path,
                  column_dict={'case_id': 'case:concept:name', 'activity': 'concept:name', 'timestamp': 'time:timestamp', 'resource': 'org:resource', 'event_id' : None},
                  prefixes={'ex':'http://www.example.com/', 'on': 'https://stl.mie.utoronto.ca/ontologies/spm/'},
-                 process_name='P1'):
+                 process_name='P1',
+                 downsample_rate=1):
         self.process_name = process_name
         self.column_dict = column_dict
         self.prefixes = prefixes
         self.log_path = log_path
+        self.downsample_rate = downsample_rate
         self.log_df = self.load_df_from_log()
         self.mapping = self.build_mapping()
         self.fol_abox = np.array([])
@@ -34,7 +36,8 @@ class LogProcessor:
     def load_df_from_log(self):
         """
         Return a dataframe from a given XES log filepath or CSV 
-        and creates a temporary csv file with additional columns needed for consistent processing
+        and creates a temporary csv file with additional columns needed for consistent processing.
+        Optionally downsample data for large datasets (necessary for large logs to be used with first order logic reasoning at this stage)
         """
         log_path = self.log_path
         col_dict = self.column_dict
@@ -52,12 +55,25 @@ class LogProcessor:
         
         # ensure non-overlapping URIs by prefixing columns with letter type encoding
         if not col_dict['event_id']: # if no unique identifier for events, create one
-            df['event_id'] = df.index
-            self.column_dict['event_id'] = 'event_id'
+            df['eventID'] = df.index
+            self.column_dict['event_id'] = 'eventID'
+            col_dict = self.column_dict
         df[col_dict['event_id']] = df[col_dict['event_id']].apply(lambda x: f'E_{str(x)}')
         df[col_dict['case_id']] = df[col_dict['case_id']].apply(lambda x: f'C_{str(x)}')
         df[col_dict['activity']] = df[col_dict['activity']].apply(lambda x: f'A_{str(x)}')
         df[col_dict['resource']] = df[col_dict['resource']].apply(lambda x: f'R_{str(x)}')
+        
+        # Normalize column names to avoid issues with special characters in mapping
+        df.rename(columns={col_dict['case_id']: 'caseID', col_dict['activity'] : 'activityID', col_dict['resource']: 'resourceID', col_dict['timestamp']: 'timestamp'}, inplace=True)
+        # Also rename values in the column dictionary to reflect changes
+        self.column_dict = {'case_id': 'caseID', 'activity': 'activityID', 'timestamp': 'timestamp', 'resource': 'resourceID', 'event_id' : 'eventID'}
+        
+        # downsample data if necessary
+        if self.downsample_rate < 1:
+            # sample by caseID
+            unique_cases = df['caseID'].unique()
+            sampled_cases = np.random.choice(unique_cases, int(self.downsample_rate * len(unique_cases)), replace=False)
+            df = df[df['caseID'].isin(sampled_cases)]
         
         # create temporary log csv
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv') as f:
@@ -132,11 +148,12 @@ class LogProcessor:
         
         return rml_mapping
     
-    def generate_knowledge_graph(self, assume_distinct=True):
+    def generate_knowledge_graph(self, assume_distinct=False):
         """
         Generates a knowledge graph from the log and mapping
         """
         # init knowledge graph
+        print("Generating knowledge graph...")
         kg = kglab.KnowledgeGraph(name="test", namespaces=self.prefixes)
         # generate config
         config_string = f"""
@@ -152,6 +169,7 @@ class LogProcessor:
         
         
         if assume_distinct:
+            print("Adding disjointness axioms...")
             # add disjointness axioms to each individual
             i_c = kg.query_as_df(sparql="SELECT ?s ?o WHERE {?s ?p ?o . FILTER (?p = rdf:type)}")
             for c in i_c['o'].unique():
@@ -167,6 +185,7 @@ class LogProcessor:
                     kg.add(pair[0], rdflib.URIRef("http://www.w3.org/2002/07/owl#differentFrom"), pair[1])
             
         self.kg = kg
+        print("Knowledge graph generated.")
         
         return kg
         
@@ -179,12 +198,16 @@ class LogProcessor:
             output_file = output_path + f'{self.process_name}_log_instances.{format}'
             self.kg.save_rdf(output_file, format=format)
         
+        print("Knowledge graph saved.")
+        
         return None
         
     def generate_FOL(self):
         """
         Generates a First Order Logic representation of the log
         """
+        print("Generating First Order Logic representation...")
+        
         if not hasattr(self, 'kg'):
             self.generate_knowledge_graph()
             
@@ -233,6 +256,8 @@ class LogProcessor:
         # convert timepoints
         convert_timepoints(self.kg)
         
+        print("First Order Logic representation generated.")
+        
         return self.fol_abox
         
     def save_FOL(self, output_dir=None, format='prover9'):
@@ -241,14 +266,38 @@ class LogProcessor:
             self.generate_FOL()
             
         if output_dir:
-            file_ext_map = {'prover9': '.p9', 'clif': '.clif', 'prolog': '.pl'}
-            literal_map = {'prover9': lambda x: f'{str(x)}.\n',
-                           'clif': lambda x: f'({str(x)}\n)',
-                           'prolog': lambda x: f'{str(x)}.\n'}
+            file_ext_map = {'prover9': '.p9', 'clif': '.clif'}
+            literal_map = {'prover9': lambda x: f'{str(x)}.\n', 'clif': lambda x: f'({str(x)}\n)'}
             output_file = output_dir + f'{self.process_name}_log_literals{file_ext_map[format]}'
         
             with open(output_file, 'w') as f:
                 for item in self.fol_abox:
                     f.write(literal_map[format](item))
-                
+                    
+        print("First Order Logic literals saved.")
+        
         return None
+    
+    def save_datalog(self, output_dir=None):
+        
+        # datalog facts are just a syntactic difference from FOL literals
+        if self.fol_abox.size == 0:
+            self.generate_FOL()
+        
+        # start with copy of FOL literals
+        dl_facts = np.array([f'{str(x)}.' for x in self.fol_abox])
+        # replace camel case with underscores
+        dl_facts = np.array([re.sub(r'(?<!^)(?=[A-Z])(?=.*\()', '_', x) for x in dl_facts])
+        # make sure predicates are lowercase
+        dl_facts = np.array([x.lower() for x in dl_facts])
+        # eliminate special characters
+        dl_facts = np.array([re.sub(r'[<>\-%!#$^&*]', '', x) for x in dl_facts])
+        
+        self.dl_facts = dl_facts
+        
+        # generate output file
+        if output_dir:
+            output_file = output_dir + f'{self.process_name}_log_facts.pl'
+            with open(output_file, 'w') as f:
+                for item in dl_facts:
+                    f.write(f'{item}\n')
