@@ -1,0 +1,9 @@
+README.md
+setup.py
+ProMean4Py/ProcessMeaningPatternsPython.egg-info/PKG-INFO
+ProMean4Py/ProcessMeaningPatternsPython.egg-info/SOURCES.txt
+ProMean4Py/ProcessMeaningPatternsPython.egg-info/dependency_links.txt
+ProMean4Py/ProcessMeaningPatternsPython.egg-info/requires.txt
+ProMean4Py/ProcessMeaningPatternsPython.egg-info/top_level.txt
+ProMean4Py/src/__init__.py
+ProMean4Py/src/data.py

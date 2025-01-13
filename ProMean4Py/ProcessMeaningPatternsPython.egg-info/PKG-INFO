@@ -1,0 +1,23 @@
+Metadata-Version: 2.1
+Name: ProcessMeaningPatternsPython
+Version: 0.10
+Summary: An app to map event logs into ontology-based process knowledge and analyze the data through a library of knowledge patterns
+Home-page: TBD
+Author: Riley Moher
+Author-email: riley.moher@mail.utoronto.ca
+License: MIT
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Natural Language :: English
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: pm4py
+Requires-Dist: kglab
+Requires-Dist: yatter
+Requires-Dist: ruamel.yaml
+
+# Process Meaning Patterns - Python Repository
