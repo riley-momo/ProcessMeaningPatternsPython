@@ -1,0 +1,11 @@
+﻿caseID,activityID,eventID,timestamp,resourceID
+case_0,activity_A,event_0,2016-01-01 09:00:00.000000+00:00,user_1
+case_0,activity_A,event_1,2016-01-01 09:15:00.000000+00:00,user_1
+case_0,activity_C,event_2,2016-01-01 09:35:00.000000+00:00,user_1
+case_1,activity_A,event_3,2016-01-02 09:00:00.000000+00:00,user_1
+case_1,activity_B,event_4,2016-01-02 09:00:00.000000+00:00,user_0
+case_1,activity_C,event_5,2016-01-03 09:00:00.000000+00:00,user_0
+case_2,activity_A,event_6,2016-01-01 09:00:00.000000+00:00,user_1
+case_2,activity_B,event_7,2016-01-01 09:10:00.000000+00:00,user_1
+case_2,activity_C,event_8,2016-01-01 09:15:00.000000+00:00,user_2
+case_2,activity_D,event_9,2017-01-06 10:35:00.000000+00:00,user_1

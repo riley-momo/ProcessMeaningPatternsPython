@@ -1,0 +1,17 @@
+all x Resource(x) -> Object(x).
+
+all x (Activity(x) <-> activity(x)).
+
+all x Event(x) -> activity_occurrence(x).
+
+all x Case(x) -> activity_occurrence(x).
+
+all x all y hasRecordedTime(x,y) -> endof(x,y).
+
+all x all y hasCase(x,y) -> subactivity_occurrence(x,y).
+
+all x all y hasProcess(x,y) -> occurrence_of(x,y).
+
+all x all y hasActivity(x,y) -> occurrence_of(x,y).
+
+all x all y all z hasResource(x,y) & hasRecordedTime(x,z) -> participates_in(x,y,z).

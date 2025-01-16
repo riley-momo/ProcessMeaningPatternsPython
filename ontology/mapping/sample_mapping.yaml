@@ -1,0 +1,36 @@
+prefixes:
+  ex: http://www.example.com/
+  on: https://stl.mie.utoronto.ca/ontologies/spm/
+
+mappings:
+  events:
+    sources:
+      - ['../example_data/sample_log.csv~csv']
+    s: ex:$(eventID)
+    po:
+      - [a, on:Event]
+      - [on:hasCase, ex:$(caseID)]
+      - [on:hasActivity, ex:$(activityID)]
+      - [on:hasResource, ex:$(resourceID)]
+      - [on:hasRecordedTime, $(timestamp), xsd:dateTimeStamp]
+  
+  resources:
+    sources:
+      - ['../example_data/sample_log.csv~csv']
+    s: ex:$(resourceID)
+    po:
+      - [a, on:Resource]
+
+  cases:
+    sources:
+      - ['../example_data/sample_log.csv~csv']
+    s: ex:$(caseID)
+    po:
+      - [a, on:Case]
+
+  activities:
+    sources:
+      - ['../example_data/sample_log.csv~csv']
+    s: ex:$(activityID)
+    po:
+      - [a, on:Activity]
