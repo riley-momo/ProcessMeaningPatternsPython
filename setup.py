@@ -7,7 +7,7 @@ setup(
     name='ProcessMeaningPatternsPython',
     version='0.10',
     package_dir={'': 'ProMean4Py'},
-    packages=find_packages(where='ProMean4Py'),
+    packages=['ProMean4Py'],
     description='An app to map event logs into ontology-based process knowledge and analyze the data through a library of knowledge patterns',
     long_description=long_description,
     long_description_content_type="text/markdown",
