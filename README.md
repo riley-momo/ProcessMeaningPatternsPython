@@ -36,7 +36,7 @@ More thorough examples, including an example utilizing real-world enterprise dat
 
 ProMean4Py is published on the python package index (pypi) and can be installed on any python version >= 3.9.X by simply invoking pip:
 
-`pip install ProMean4Py`
+`pip install ProcessMeaningPatternsPython`
 
 ## Release Notes
 
