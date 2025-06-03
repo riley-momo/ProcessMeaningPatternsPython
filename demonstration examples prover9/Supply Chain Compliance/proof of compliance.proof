@@ -1,0 +1,32 @@
+============================== prooftrans ============================
+Prover9 (32) version Dec-2007, Dec 2007.
+Process 13056 was started by ryno_ on DESKTOP-88IR6MG,
+Sat Mar 29 17:36:09 2025
+The command was "/cygdrive/c/Program Files (x86)/Prover9-Mace4/bin-win32/prover9".
+============================== end of head ===========================
+
+============================== end of input ==========================
+
+============================== PROOF =================================
+
+% -------- Comments from original proof --------
+% Proof 1 at 0.00 (+ 0.00) seconds.
+% Length of proof is 12.
+% Level of proof is 4.
+% Maximum clause weight is 8.
+% Given clauses 9.
+
+1 (all i (item(i) -> i = B)) # label(non_clause).  [assumption].
+2 (all i (GR_IR_Rule(i) <-> (all o1 (occurrence_of(o1,Record_GR) & participates(i,o1) -> (exists o2 (occurrence_of(o2,Record_IR) & participates(i,o2))))))) # label(non_clause).  [assumption].
+3 (all i (item(i) -> GR_IR_Rule(i))) # label(non_clause) # label(goal).  [goal].
+4 -item(x) | x = B.  [clausify(1)].
+6 item(c1).  [deny(3)].
+7 participates(B,o1).  [assumption].
+9 occurrence_of(o1,Record_IR).  [assumption].
+15 GR_IR_Rule(x) | -occurrence_of(y,Record_IR) | -participates(x,y).  [clausify(2)].
+16 -GR_IR_Rule(c1).  [deny(3)].
+17 c1 = B.  [resolve(6,a,4,a)].
+18 -GR_IR_Rule(B).  [back_rewrite(16),rewrite([17(1)])].
+21 $F.  [resolve(15,c,7,a),unit_del(a,18),unit_del(b,9)].
+
+============================== end of proof ==========================

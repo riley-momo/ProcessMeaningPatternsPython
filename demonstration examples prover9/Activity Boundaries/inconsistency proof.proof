@@ -1,0 +1,59 @@
+============================== prooftrans ============================
+Prover9 (32) version Dec-2007, Dec 2007.
+Process 23968 was started by ryno_ on DESKTOP-88IR6MG,
+Sat Mar 29 17:24:28 2025
+The command was "/cygdrive/c/Program Files (x86)/Prover9-Mace4/bin-win32/prover9".
+============================== end of head ===========================
+
+============================== end of input ==========================
+
+============================== PROOF =================================
+
+% -------- Comments from original proof --------
+% Proof 1 at 0.00 (+ 0.00) seconds.
+% Length of proof is 39.
+% Level of proof is 5.
+% Maximum clause weight is 10.
+% Given clauses 34.
+
+1 (all x (activity(x) | activity_occurrence(x) | timepoint(x) | object(x))) # label(non_clause).  [assumption].
+2 (all x ((activity(x) -> -(activity_occurrence(x) | object(x) | timepoint(x))) & (activity_occurrence(x) -> -(object(x) | timepoint(x))) & (object(x) -> -timepoint(x)))) # label(non_clause).  [assumption].
+3 (all t1 all t2 (before(t1,t2) -> t1 != t2)) # label(non_clause).  [assumption].
+4 (all t1 all t2 (before(t1,t2) -> -before(t2,t1))) # label(non_clause).  [assumption].
+6 (all x all t1 all t2 (begin_of(x,t1) & begin_of(x,t2) -> t1 = t2)) # label(non_clause).  [assumption].
+7 (all x all t1 all t2 (end_of(x,t1) & end_of(x,t2) -> t1 = t2)) # label(non_clause).  [assumption].
+8 (all t1 all t2 (beforeEq(t1,t2) <-> timepoint(t1) & timepoint(t2) & (before(t1,t2) | t1 = t2))) # label(non_clause).  [assumption].
+9 (all x (activity_occurrence(x) -> (exists t1 exists t2 (begin_of(x,t1) & end_of(x,t2) & beforeEq(t1,t2))))) # label(non_clause).  [assumption].
+10 -activity(x) | -activity_occurrence(x).  [clausify(2)].
+11 activity_occurrence(o0).  [assumption].
+12 activity(x) | activity_occurrence(x) | timepoint(x) | object(x).  [clausify(1)].
+13 -activity_occurrence(x) | -object(x).  [clausify(2)].
+14 -activity_occurrence(x) | -timepoint(x).  [clausify(2)].
+15 -activity_occurrence(x) | begin_of(x,f1(x)).  [clausify(9)].
+16 -activity_occurrence(x) | end_of(x,f2(x)).  [clausify(9)].
+17 -activity_occurrence(x) | beforeEq(f1(x),f2(x)).  [clausify(9)].
+21 -beforeEq(x,y) | before(x,y) | y = x.  [clausify(8)].
+23 beforeEq(f1(o0),f2(o0)).  [resolve(17,a,11,a)].
+27 begin_of(o0,t12_02).  [assumption].
+28 end_of(o0,t12_00).  [assumption].
+29 before(t12_00,t12_02).  [assumption].
+33 -before(x,y) | y != x.  [clausify(3)].
+34 -before(x,y) | -before(y,x).  [clausify(4)].
+36 -begin_of(x,y) | -begin_of(x,z) | z = y.  [clausify(6)].
+37 -end_of(x,y) | -end_of(x,z) | z = y.  [clausify(7)].
+38 -activity(o0).  [resolve(10,b,11,a)].
+39 -object(o0).  [resolve(13,a,11,a)].
+40 -timepoint(o0).  [resolve(14,a,11,a)].
+42 begin_of(x,f1(x)) | activity(x) | timepoint(x) | object(x).  [resolve(15,a,12,b)].
+44 end_of(x,f2(x)) | activity(x) | timepoint(x) | object(x).  [resolve(16,a,12,b)].
+47 before(f1(o0),f2(o0)) | f2(o0) = f1(o0).  [resolve(23,a,21,a)].
+55 t12_02 != t12_00.  [resolve(33,a,29,a)].
+56 -before(t12_02,t12_00).  [resolve(34,a,29,a)].
+57 -begin_of(o0,x) | t12_02 = x.  [resolve(36,a,27,a),flip(b)].
+58 -end_of(o0,x) | t12_00 = x.  [resolve(37,a,28,a),flip(b)].
+71 f1(o0) = t12_02.  [resolve(57,a,42,a),flip(a),unit_del(b,38),unit_del(c,40),unit_del(d,39)].
+73 before(t12_02,f2(o0)) | f2(o0) = t12_02.  [back_rewrite(47),rewrite([71(2),71(8)])].
+74 f2(o0) = t12_00.  [resolve(58,a,44,a),flip(a),unit_del(b,38),unit_del(c,40),unit_del(d,39)].
+75 $F.  [back_rewrite(73),rewrite([74(3),74(5)]),flip(b),unit_del(a,56),unit_del(b,55)].
+
+============================== end of proof ==========================

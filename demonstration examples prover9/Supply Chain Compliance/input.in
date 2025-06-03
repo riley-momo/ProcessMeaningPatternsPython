@@ -1,0 +1,37 @@
+% Saved by Prover9-Mace4 Version 0.5, December 2007.
+
+set(ignore_option_dependencies). % GUI handles dependencies
+
+if(Prover9). % Options for Prover9
+  assign(max_seconds, 60).
+end_if.
+
+if(Mace4).   % Options for Mace4
+  assign(max_seconds, 60).
+end_if.
+
+formulas(assumptions).
+
+% Mapped Data
+item(B).
+participates(B, o1).
+participates(B, o2).
+occurrence_of(o1, Record_IR).
+occurrence_of(o2, Record_GR).
+
+% CWA for items
+all i (item(i) -> (i=B)).
+
+% Data Theory
+all i (GR_IR_Rule(i) <-> 
+  (all o1 (occurrence_of(o1, Record_GR) & participates(i, o1) -> 
+    exists o2 (occurrence_of(o2, Record_IR) & participates(i, o2))))).
+
+end_of_list.
+
+formulas(goals).
+
+all i (item(i) -> GR_IR_Rule(i)).
+
+end_of_list.
+

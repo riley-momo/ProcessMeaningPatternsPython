@@ -1,0 +1,49 @@
+% Saved by Prover9-Mace4 Version 0.5, December 2007.
+
+set(ignore_option_dependencies). % GUI handles dependencies
+
+if(Prover9). % Options for Prover9
+  assign(max_seconds, 60).
+end_if.
+
+if(Mace4).   % Options for Mace4
+  assign(max_seconds, 60).
+end_if.
+
+formulas(assumptions).
+
+% Mapped Data
+activity_occurrence(o0).
+timepoint(t12_02).
+timepoint(t12_00).
+begin_of(o0, t12_02).
+end_of(o0, t12_00).
+before(t12_00, t12_02).
+
+% Process Ontology Axioms
+(all x  (activity(x) | activity_occurrence(x) | timepoint(x) | object(x))).
+
+(all x  ((activity(x) -> -(activity_occurrence(x) | object(x) | timepoint(x))) & (activity_occurrence(x) -> -(object(x) | timepoint(x))) & (object(x) -> -(timepoint(x))))).
+
+all t1 all t2 (before(t1,t2) -> -(t1 = t2)).
+
+all t1 all t2 (before(t1,t2) -> -before(t2,t1)).
+
+all t -before(t,t).
+
+all x all t1 all t2 (begin_of(x, t1) & begin_of(x, t2) -> (t1 = t2)).
+
+all x all t1 all t2 (end_of(x, t1) & end_of(x, t2) -> (t1 = t2)).
+
+(all t1 all t2  (beforeEq(t1,t2) <-> (timepoint(t1) & timepoint(t2) & (before(t1,t2) | (t1=t2))))).
+
+all x (activity_occurrence(x) -> 
+  (exists t1 exists t2 
+    (begin_of(x, t1) & end_of(x, t2) & beforeEq(t1, t2)))).
+
+end_of_list.
+
+formulas(goals).
+
+end_of_list.
+

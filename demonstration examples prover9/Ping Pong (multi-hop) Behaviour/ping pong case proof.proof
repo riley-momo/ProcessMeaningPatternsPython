@@ -1,0 +1,53 @@
+============================== prooftrans ============================
+Prover9 (32) version Dec-2007, Dec 2007.
+Process 21624 was started by ryno_ on DESKTOP-88IR6MG,
+Sat Mar 29 18:55:47 2025
+The command was "/cygdrive/c/Program Files (x86)/Prover9-Mace4/bin-win32/prover9".
+============================== end of head ===========================
+
+============================== end of input ==========================
+
+============================== PROOF =================================
+
+% -------- Comments from original proof --------
+% Proof 1 at 0.00 (+ 0.00) seconds.
+% Length of proof is 33.
+% Level of proof is 10.
+% Maximum clause weight is 30.
+% Given clauses 97.
+
+1 (all r1 all r2 all o1 all o2 all c (hand_off(r1,r2,o1,o2,c) <-> next_subOcc_event(o1,o2,c) & participates(r1,o1) & participates(r2,o2) & r1 != r2)) # label(non_clause).  [assumption].
+2 (all c (ping_pong(c) <-> (exists e1 exists e2 exists e3 exists e4 exists r1 exists r2 exists r3 exists r4 (hand_off(e1,r1,e2,r2,c) & hand_off(e3,r3,e4,r4,c) & e1 != e3 & e2 != e4)))) # label(non_clause).  [assumption].
+12 (all o1 all o2 all c all t1 all t2 (occurs_at(o1,t1) & occurs_at(o2,t2) & before(t1,t2) & subactivity_occ(o1,c) & subactivity_occ(o2,c) -> next_subOcc_event(o1,o2,c))) # label(non_clause).  [assumption].
+13 (exists c ping_pong(c)) # label(non_clause) # label(goal).  [goal].
+28 hand_off(x,y,z,u,w) | -next_subOcc_event(z,u,w) | -participates(x,z) | -participates(y,u) | y = x.  [clausify(1)].
+30 -occurs_at(x,y) | -occurs_at(z,u) | -before(y,u) | -subactivity_occ(x,w) | -subactivity_occ(z,w) | next_subOcc_event(x,z,w).  [clausify(12)].
+31 ping_pong(x) | -hand_off(y,z,u,w,x) | -hand_off(v5,v6,v7,v8,x) | v5 = y | v7 = u.  [clausify(2)].
+36 -ping_pong(x).  [deny(13)].
+37 subactivity_occ(o1,A).  [assumption].
+38 subactivity_occ(o2,A).  [assumption].
+39 subactivity_occ(o3,A).  [assumption].
+40 participates(OrgC,o1).  [assumption].
+41 participates(OrgB,o2).  [assumption].
+42 participates(OrgC,o3).  [assumption].
+43 occurs_at(o1,t16_28).  [assumption].
+44 occurs_at(o2,t16_35).  [assumption].
+45 occurs_at(o3,t16_40).  [assumption].
+46 before(t16_28,t16_35).  [assumption].
+47 before(t16_35,t16_40).  [assumption].
+48 o1 != o2.  [assumption].
+49 o2 != o1.  [copy(48),flip(a)].
+65 OrgB != OrgC.  [assumption].
+91 -occurs_at(x,y) | -occurs_at(z,u) | -before(y,u) | -subactivity_occ(x,w) | -subactivity_occ(z,w) | hand_off(v5,v6,x,z,w) | -participates(v5,x) | -participates(v6,z) | v6 = v5.  [resolve(30,f,28,b)].
+96 -hand_off(x,y,z,u,w) | -hand_off(v5,v6,v7,v8,w) | v5 = x | v7 = z.  [resolve(36,a,31,a)].
+117 -occurs_at(o2,x) | -occurs_at(y,z) | -before(x,z) | -subactivity_occ(y,A) | hand_off(u,w,o2,y,A) | -participates(u,o2) | -participates(w,y) | w = u.  [resolve(91,d,38,a)].
+120 -occurs_at(x,y) | -occurs_at(o2,z) | -before(y,z) | -subactivity_occ(x,A) | hand_off(u,w,x,o2,A) | -participates(u,x) | -participates(w,o2) | w = u.  [resolve(91,e,38,a)].
+136 -occurs_at(o2,x) | -occurs_at(o3,y) | -before(x,y) | hand_off(z,u,o2,o3,A) | -participates(z,o2) | -participates(u,o3) | u = z.  [resolve(117,d,39,a)].
+146 -occurs_at(o3,x) | -before(t16_35,x) | hand_off(y,z,o2,o3,A) | -participates(y,o2) | -participates(z,o3) | z = y.  [resolve(136,a,44,a)].
+148 hand_off(x,y,o2,o3,A) | -participates(x,o2) | -participates(y,o3) | y = x.  [resolve(146,a,45,a),unit_del(a,47)].
+149 hand_off(OrgB,x,o2,o3,A) | -participates(x,o3) | OrgB = x.  [resolve(148,b,41,a),flip(c)].
+151 hand_off(OrgB,OrgC,o2,o3,A).  [resolve(149,b,42,a),unit_del(b,65)].
+154 -hand_off(OrgC,x,o1,y,A).  [ur(96,b,151,a,c,65,a,d,49,a)].
+156 $F.  [ur(120,b,44,a,c,46,a,d,37,a,e,154,a,f,40,a,g,41,a,h,65,a),unit_del(a,43)].
+
+============================== end of proof ==========================
